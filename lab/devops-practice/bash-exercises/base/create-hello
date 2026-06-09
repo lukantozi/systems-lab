@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-touch hello-conv-world
-
-for _ in {1..10}; do
-    echo "hello" >> hello-conv-world
-done

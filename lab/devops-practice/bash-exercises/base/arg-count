@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-NUMBER=1
-
-for arg in $@; do
-    echo -e "argument #${NUMBER}: $arg";
-    (( NUMBER++ ))
-done

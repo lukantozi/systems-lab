@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-
-cat syntax.md | grep "E" | sort
-
-echo ${PIPESTATUS[@]}

@@ -1,8 +1,0 @@
-#!/usr/bin/env bash
-
-pass=
-
-until [[ $pass == "secret" ]]; do
-    read pass
-done
-echo "Access granted"

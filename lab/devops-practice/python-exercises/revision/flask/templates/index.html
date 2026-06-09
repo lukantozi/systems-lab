@@ -1,9 +1,0 @@
-<!DOCTYPE html>
-<html>
-    {% for repo in repos %}
-    <h3>Repo Name: {{ repo[0] }}</h3> 
-    <p>Description: {{ repo[1] }}</p> 
-    <p>Star Count: {{ repo[2] }}</p> 
-    <a href={{ repo[3] }}>Link to repo</a>
-    {% endfor %}
-</html>

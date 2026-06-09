@@ -1,7 +1,0 @@
-#!/usr/bin/env bash
-
-err_msg="not defined at all"
-
-unset MAIL
-
-: "${MAIL?$err_msg}"
