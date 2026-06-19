@@ -129,6 +129,18 @@ int least_and_rest() {
     return y;
 }
 
+/*
+ * replace_byte(0x12345678, 2, 0xAB) --> 0x12AB5678
+ * replace_byte(0x12345678, 0, 0xAB) --> 0x123456AB
+ */
+
+unsigned replace_byte(unsigned x, int i, unsigned char b) {
+    /* version with pointers */
+    *((byte_pointer) &x + i) = b;
+    // TODO: Implement it with bitwise operations
+    return x;
+}
+
 int main(int argc, char *argv[])
 {
     int val = 12345;
@@ -154,5 +166,12 @@ int main(int argc, char *argv[])
         printf("%s\n", is_little_endian()? "Little endian": "Big endian");
     }
     least_and_rest();
+    unsigned x = 0x12345678;
+    unsigned char b = 0xAB;
+    printf("Before replacing:\n");
+    show_bytes((byte_pointer) &x, sizeof(int));
+    printf("Calling replaced bytes (at byte 2 replace with %x):\n", b);
+    unsigned replaced = replace_byte(x, 2, b);
+    show_bytes((byte_pointer) &replaced, sizeof(int));
     return 0;
 }
