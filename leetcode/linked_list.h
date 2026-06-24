@@ -8,4 +8,6 @@ struct node {
 
 struct node *node_create(int value);
 
+void print_linked_list(struct node *head);
+
 #endif
