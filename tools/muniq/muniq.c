@@ -11,11 +11,17 @@ void process(FILE *input, FILE *output) {
     if (fgets(buff_first, sizeof buff_first, input) == NULL) {
         exit(EXIT_SUCCESS);
     }
-    fputs(buff_first, output);
+    if (fputs(buff_first, output) == EOF) {
+        perror("fputs");
+        exit(EXIT_FAILURE);
+    }
     while (fgets(buff_second, sizeof buff_second, input) != NULL) {
         if (strcmp(buff_first, buff_second) == 0) continue;
         else {
-            fputs(buff_second, output);
+            if (fputs(buff_second, output) == EOF) {
+                perror("fputs");
+                exit(EXIT_FAILURE);
+            }
             strcpy(buff_first, buff_second);
         }
     }
