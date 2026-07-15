@@ -9,12 +9,12 @@ void *Malloc(size_t size) {
     return ptr;
 }
 
-void Realloc(void *ptr, size_t size) {
+void *Realloc(void *ptr, size_t size) {
     char *new_ptr;
     if ((new_ptr = realloc(ptr, size)) == NULL) {
         free(ptr);
         perror("realloc");
         exit(ENOMEM);
     }
-    ptr = new_ptr;
+    return new_ptr;
 }
