@@ -33,3 +33,9 @@ int env_exec(char **tokens) {
     }
     return(EXIT_SUCCESS);
 }
+
+struct builtin cmds[BUILTIN_SIZE] = {
+    [0] = {.name="exit", .func=exit_exec},
+    [1] = {.name="cd",   .func=cd_exec},
+    [2] = {.name="env",  .func=env_exec},
+};

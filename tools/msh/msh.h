@@ -15,7 +15,4 @@
 #define TOKENSIZE  64
 #define BUFSIZE 1024
 
-void *Malloc(size_t);
-void *Realloc(void *, size_t);
-
 #endif
