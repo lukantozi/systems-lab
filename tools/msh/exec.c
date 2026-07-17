@@ -89,8 +89,6 @@ void execute_pipeline(int pipefds[], int pipe_count, int pipe_flag,
             case 0: /* child */
                 if (i == 0) {                    /* first command; real stdin */
                     if (dup2(pipefds[i*2+1], STDOUT_FILENO) == -1) {
-                        // free(line);
-                        // free(tokens);
                         err(EXIT_FAILURE, "dup2(first command)");
                     }
                     close_pipes(pipefds, pipe_count);
@@ -98,8 +96,6 @@ void execute_pipeline(int pipefds[], int pipe_count, int pipe_flag,
                     err(EXIT_FAILURE, "execvp");
                 } else if (i == command_count - 1) { /* last command; real stdout */
                     if (dup2(pipefds[(i-1)*2], STDIN_FILENO) == -1) {
-                        // free(line);
-                        // free(tokens);
                         err(EXIT_FAILURE, "dup2(last command)");
                     }
                     close_pipes(pipefds, pipe_count);
@@ -107,13 +103,9 @@ void execute_pipeline(int pipefds[], int pipe_count, int pipe_flag,
                     err(EXIT_FAILURE, "execvp");
                 } else {                         /* in between; pipes ends around */
                     if (dup2(pipefds[(i-1)*2], STDIN_FILENO) == -1) {
-                        // free(line);
-                        // free(tokens);
                         err(EXIT_FAILURE, "dup2(middle stdin)");
                     }
                     if (dup2(pipefds[i*2+1], STDOUT_FILENO) == -1) {
-                        // free(line);
-                        // free(tokens);
                         err(EXIT_FAILURE, "dup2(middle stdout)");
                     }
                     close_pipes(pipefds, pipe_count);

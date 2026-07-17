@@ -2,7 +2,7 @@
 #include "parser.h"
 #include "utils.h"
 
-char *get_line(void) {
+char *get_line(int *status) {
     size_t line_size    = BUFSIZE;
     size_t token_count  = 0;
     char  *line         = Malloc(line_size * sizeof(char *));
@@ -13,9 +13,11 @@ char *get_line(void) {
         if (c == '\n' || c == EOF) {
             if (token_count == 0) {
                 free(line);
+                *status = c == EOF ? 1 : 2;
                 return NULL;
             }
             line[token_count] = '\0';
+            *status = 0;
             return line;
         } else line[token_count] = c;
         token_count++;

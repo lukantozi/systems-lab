@@ -18,6 +18,7 @@ int main(void) {
     char *line = NULL;
     int pipe_flag;
     int pipe_count;
+    int line_status;
     signal(SIGINT, prompt);
 
     while (1) {
@@ -26,11 +27,15 @@ int main(void) {
         line = NULL;
 
         prompt(0);
-        line = get_line();
-        if (line == NULL) {
-            puts("exit");
-            fflush(stdout);
-            exit(EXIT_SUCCESS);
+        line = get_line(&line_status);
+        switch (line_status) {
+            case 1:
+                puts("exit");
+                fflush(stdout);
+                exit(EXIT_SUCCESS);
+                break;
+            case 2:
+                continue;
         }
 
         char **tokens = Malloc(TOKENSIZE * sizeof(char *));
