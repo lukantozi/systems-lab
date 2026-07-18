@@ -32,13 +32,39 @@ Press `Ctrl+D` or run `exit` to leave the shell.
 
 ## Examples
 
+The `❯` prompt below is my host shell; `>` is the `msh` prompt.
+
 ```sh
-> ls
+❯ ./msh
+
+/home/styx/systems-lab/tools/msh
 > pwd
+/home/styx/systems-lab/tools/msh
+
+/home/styx/systems-lab/tools/msh
+> echo hello from msh
+hello from msh
+
+/home/styx/systems-lab/tools/msh
+> printf 'alpha\nbeta\ngamma\n' | wc -l
+3
+
+/home/styx/systems-lab/tools/msh
+> seq 1 10 | tail -3
+8
+9
+10
+
+/home/styx/systems-lab/tools/msh
 > cd /tmp
-> env
-> ls | grep .c
-> cat file.txt | grep needle | wc -l
+
+/tmp
+> pwd
+/tmp
+> exit
+
+systems-lab/tools/msh on  main [?] via  v16.1.1-gcc
+❯
 ```
 
 ## Pipeline model
