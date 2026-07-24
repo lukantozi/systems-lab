@@ -14,6 +14,10 @@ STACK = build/stack
 STACK_SRC = tests/test_stack.c src/vector.c src/stack.c
 STACK_HDR = include/stack.h
 
+QUEUE = build/queue
+QUEUE_SRC = tests/test_queue.c src/queue.c
+QUEUE_HDR = include/queue.h
+
 vector: $(VECTOR)
 	./$(VECTOR)
 
@@ -27,6 +31,13 @@ stack: $(STACK)
 $(STACK): $(STACK_SRC) $(STACK_HDR)
 	mkdir -p build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(SANFLAGS) $(STACK_SRC) -o $(STACK)
+
+queue: $(QUEUE)
+	./$(QUEUE)
+
+$(QUEUE): $(QUEUE_SRC) $(QUEUE_HDR)
+	mkdir -p build
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(SANFLAGS) $(QUEUE_SRC) -o $(QUEUE)
 
 clean:
 	rm -rf build/*
