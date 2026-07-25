@@ -18,6 +18,10 @@ QUEUE = build/queue
 QUEUE_SRC = tests/test_queue.c src/queue.c
 QUEUE_HDR = include/queue.h
 
+LIST = build/list
+LIST_SRC = tests/test_list.c src/list.c
+LIST_HDR = include/list.h
+
 vector: $(VECTOR)
 	./$(VECTOR)
 
@@ -38,6 +42,13 @@ queue: $(QUEUE)
 $(QUEUE): $(QUEUE_SRC) $(QUEUE_HDR)
 	mkdir -p build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(SANFLAGS) $(QUEUE_SRC) -o $(QUEUE)
+
+list: $(LIST)
+	./$(LIST)
+
+$(LIST): $(LIST_SRC) $(LIST_HDR)
+	mkdir -p build
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(SANFLAGS) $(LIST_SRC) -o $(LIST)
 
 clean:
 	rm -rf build/*
