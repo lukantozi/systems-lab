@@ -17,21 +17,23 @@ node *list_init(int val) {
     return n;
 }
 
-void list_insert_first(node **head, int val) {
+int list_insert_first(node **head, int val) {
     node *n = list_init(val);
     if (n == NULL) {
         fprintf(stderr, "couldn't insert value: %d\n", val);
-        return;
+        return 0;
     }
     n->next = *head;
     *head = n;
+
+    return 1;
 }
 
-void list_insert_last(node **head, int val) {
+int list_insert_last(node **head, int val) {
     node *n = list_init(val);
     if (n == NULL) {
         fprintf(stderr, "couldn't insert value: %d\n", val);
-        return;
+        return 0;
     }
 
     if (*head == NULL) *head = n;
@@ -40,12 +42,13 @@ void list_insert_last(node **head, int val) {
         while (tmp->next) tmp = tmp->next;
         tmp->next = n;
     }
+
+    return 1;
 }
 
 int list_insert_at(node **head, size_t index, int val) {
     if (index == 0) {
-        list_insert_first(head, val);
-        return 1;
+        return list_insert_first(head, val);
     }
 
     if (*head == NULL) {
@@ -118,18 +121,12 @@ int list_remove_at(node **head, size_t index, int *val) {
     }
 
     if (index == 0) {
-        list_remove_first(head, val);
-        return 1;
+        return list_remove_first(head, val);
     }
 
     node *tmp = *head;
     for (size_t i = 0; tmp != NULL && i < index - 1; i++) tmp = tmp->next;
-    if (tmp == NULL) {
-        fprintf(stderr, "%zu: index out of list range\n", index);
-        return 0;
-    }
-
-    if (tmp->next == NULL) {
+    if (tmp == NULL || tmp->next == NULL) {
         fprintf(stderr, "%zu: index out of list range\n", index);
         return 0;
     }

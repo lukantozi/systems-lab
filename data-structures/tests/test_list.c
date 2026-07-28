@@ -10,8 +10,8 @@ int main(void) {
     assert(n == NULL);
     assert(out == 2);
 
-    list_insert_first(&n, 4);
-    list_insert_at(&n, 1, 6);
+    assert(1 == list_insert_first(&n, 4));
+    assert(1 == list_insert_at(&n, 1, 6));
     list_insert_first(&n, 8);
     list_show(n);
 
@@ -30,7 +30,7 @@ int main(void) {
     assert(0 == list_insert_at(&n, 5, 10));
     list_remove_first(&n, &out);
     list_show(n);
-    list_insert_last(&n, 20);
+    assert(1 == list_insert_last(&n, 20));
     list_show(n);
 
     list_free(n);

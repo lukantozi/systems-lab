@@ -6,8 +6,8 @@
 typedef struct node node;
 
 node *list_init(int);
-void list_insert_first(node **, int);
-void list_insert_last(node **, int);
+int list_insert_first(node **, int);
+int list_insert_last(node **, int);
 int list_insert_at(node **, size_t, int);
 int list_remove_first(node **, int *);
 int list_remove_last(node **, int *);
