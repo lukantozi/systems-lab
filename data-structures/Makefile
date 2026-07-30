@@ -22,6 +22,10 @@ LIST = build/list
 LIST_SRC = tests/test_list.c src/list.c
 LIST_HDR = include/list.h
 
+DLIST = build/dlist
+DLIST_SRC = tests/test_dlist.c src/dlist.c
+DLIST_HDR = include/dlist.h
+
 vector: $(VECTOR)
 	./$(VECTOR)
 
@@ -49,6 +53,13 @@ list: $(LIST)
 $(LIST): $(LIST_SRC) $(LIST_HDR)
 	mkdir -p build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(SANFLAGS) $(LIST_SRC) -o $(LIST)
+
+dlist: $(DLIST)
+	./$(DLIST)
+
+$(DLIST): $(DLIST_SRC) $(DLIST_HDR)
+	mkdir -p build
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(SANFLAGS) $(DLIST_SRC) -o $(DLIST)
 
 clean:
 	rm -rf build/*
