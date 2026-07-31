@@ -57,9 +57,9 @@ Book exercises, experiments, and typed examples.
 
 | Material | Path | Focus |
 |----------|------|-------|
-| CS:APP 3e | [`study/cs-app3e/`](study/cs-app3e/) | Data representation, bit manipulation, systems programming |
+| CS:APP 3e | [`study/csapp/`](study/csapp/) | Data representation, bit manipulation, systems programming |
 | Beej's Guide to C | [`study/bgc/`](study/bgc/) | C language experiments and examples |
-| Algorithm Design Manual | [`study/algorithms/`](study/algorithms/) | Algorithm analysis and implementations |
+| Algorithm Design Manual | [`study/adm/`](study/adm/) | Algorithm analysis and implementations |
 
 ***
 
