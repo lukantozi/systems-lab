@@ -4,50 +4,62 @@
 #include <assert.h>
 
 int main(void) {
-    dlist *dp = dlist_init(5);
     int out;
+    dlist *dp = dlist_init(5);
+    dlist_show(dp);
+    
+    dlist_node *head = dlist_get_head(dp);
+    dlist_node *tail = dlist_get_head(dp);
+    assert(5 == head->value);
+    assert(5 == tail->value);
+    assert(1 == dlist_get_size(dp));
 
-    assert(dp != NULL);
-    assert(-1 == dlist_get_next(dp, &out));
-    assert(-1 == dlist_get_prev(dp, &out));
-    assert(1 == dlist_get_current(dp, &out));
-    assert(5 == out);
+    dlist_insert_head(&dp, 10);
     dlist_show(dp);
 
-    assert(1 == dlist_insert_next(&dp, 555));
-    dlist_get_last(dp, &out);
-    assert(555 == out);
+    printf("new head: %d\n", head->prev->value);
     dlist_show(dp);
 
-    assert(1 == dlist_insert_first(&dp, 10));
-    assert(-1 == dlist_get_prev(dp, &out));
-    assert(1 == dlist_get_next(dp, &out));
-    assert(5 == out);
-    assert(1 == dlist_get_current(dp, &out));
-    assert(10 == out);
-    dlist_get_first(dp, &out);
-    assert(10 == out);
+    dlist_insert_tail(&dp, 15);
     dlist_show(dp);
 
-    dlist_insert_last(&dp, 55);
-    dlist_get_first(dp, &out);
-    assert(10 == out);
-    dlist_get_last(dp, &out);
-    assert(55 == out);
+    dlist_insert_head(&dp, 20);
     dlist_show(dp);
 
-    dlist_insert_first(&dp, 20);
-    dlist_get_first(dp, &out);
-    assert(20 == out);
+    dlist_node *node = dlist_get_head(dp);
+    node = node->next;
+
+    dlist_insert_next(dp, &node, 11);
     dlist_show(dp);
 
-    dlist_insert_next(&dp, 21);
+    node = node->prev;
+    dlist_insert_prev(dp, &node, 22);
+    assert(1 == dlist_remove_head(dp, &out));
+    printf("removed: %d\n", out);
     dlist_show(dp);
 
-    dlist_insert_last(&dp, 33);
-    dlist_get_last(dp, &out);
-    assert(33 == out);
+    head = dlist_get_head(dp);
+    printf("new head: %d\n", head->value);
+
+    tail = dlist_get_tail(dp);
+    printf("tail: %d\n", tail->value);
+
+    assert(1 == dlist_remove_tail(dp, &out));
+    printf("removed: %d\n", out);
+
     dlist_show(dp);
+    tail = dlist_get_tail(dp);
+    printf("new tail: %d\n", tail->value);
+
+    dlist_remove_tail(dp, &out);
+    dlist_show(dp);
+    tail = dlist_get_tail(dp);
+    printf("new tail: %d\n", tail->value);
+
+    dlist_remove_tail(dp, &out);
+    dlist_show(dp);
+    tail = dlist_get_tail(dp);
+    printf("new tail: %d\n", tail->value);
 
     dlist_free(dp);
 }

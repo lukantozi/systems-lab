@@ -3,140 +3,204 @@
 #include <stdio.h>
 
 struct dlist {
-    int value;
-    dlist *next;
-    dlist *prev;
-    dlist *head;
-    dlist *tail;
+    int size;
+    dlist_node *head;
+    dlist_node *tail;
 };
-
-/* TODO:
- * Define ownership/invariants for head and tail.
- * Verify insert_first, insert_last, insert_next.
- * Implement insert_prev.
- */
 
 dlist *dlist_init(int val) {
     dlist *dp = malloc(sizeof(*dp));
-    if (dp == NULL) return NULL;
-    dp->value = val;
-    dp->next = NULL;
-    dp->prev = NULL;
-    dp->head = dp;
-    dp->tail = dp;
+    if (dp == NULL) 
+        return NULL;
+
+    dlist_node *dnp = malloc(sizeof(*dnp));
+    if (dnp == NULL) {
+        free(dp);
+        return NULL;
+    }
+
+    dnp->value = val;
+    dnp->next = NULL;
+    dnp->prev = NULL;
+
+    dp->head = dnp;
+    dp->tail = dnp;
+    dp->size = 1;
+
     return dp;
 }
 
-int dlist_insert_first(dlist **dp, int val) {
-    dlist *dpn = dlist_init(val);
-    if (dpn == NULL) {
+int dlist_insert_head(dlist **dp, int val) {
+    dlist_node *dnp = malloc(sizeof(*dnp));
+    if (dnp == NULL) {
         fprintf(stderr, "couldn't insert value: %d\n", val);
         return 0;
     }
+
     /* wire new node into list */
-    dpn->next = *dp;
-    (*dp)->prev = dpn;
-    /* give the new node info about list */
-    dpn->tail = (*dp)->tail;
-    dpn->head = (*dp)->head;
-    /* update head */
-    *dp = dpn;
+    dnp->next = (*dp)->head;
+    dnp->prev = NULL;
+    dnp->value = val;
+    (*dp)->head->prev = dnp;
+
+    /* update list head */
+    (*dp)->head = dnp;
+    (*dp)->size++;
+
     return 1;
 }
 
-int dlist_insert_last(dlist **dp, int val) {
-    dlist *dpn = dlist_init(val);
-    if (dpn == NULL) {
+int dlist_insert_tail(dlist **dp, int val) {
+    dlist_node *dnp = malloc(sizeof(*dnp));
+    if (dnp == NULL) {
         fprintf(stderr, "couldn't insert value: %d\n", val);
         return 0;
     }
+
     /* wire new node into list */
-    (*dp)->tail->next = dpn;
-    dpn->prev = (*dp)->tail;
-    /* give the new node info about list */
-    dpn->head = (*dp)->head;
-    dpn->tail = dpn;
-    /* update tail */
-    (*dp)->tail = dpn;
+    dnp->prev = (*dp)->tail;
+    dnp->next = NULL;
+    dnp->value = val;
+    (*dp)->tail->next = dnp;
+
+    /* update list tail */
+    (*dp)->tail = dnp;
+    (*dp)->size++;
+
     return 1;
 }
 
-int dlist_insert_next(dlist **dp, int val) {
-    dlist *dpn = dlist_init(val);
-    if (dpn == NULL) {
+int dlist_insert_next(dlist *dp, dlist_node **dnp, int val) {
+    dlist_node *dpnew = malloc(sizeof(*dpnew));
+    if (dpnew == NULL) {
         fprintf(stderr, "couldn't insert value: %d\n", val);
         return 0;
     }
-    dlist *dpt_next = (*dp)->next;
+
     /* wire new node into list */
-    (*dp)->next = dpn;
-    dpn->next = dpt_next;
-    dpn->prev = (*dp);
-    if (dpt_next != NULL) dpt_next->prev = dpn;
-    else { /* if inserting as last, update tail */
-        (*dp)->tail = dpn;
-        dpn->tail = dpn;
-    }
+    dlist_node *tmp_next = (*dnp)->next;
+    dpnew->next = tmp_next;
+    dpnew->prev = *dnp;
+    dpnew->value = val;
+
+    /* update tail if necessary */
+    if (tmp_next == NULL)
+        dp->tail = dpnew;
+    else
+        tmp_next->prev = dpnew;
+
+    (*dnp)->next = dpnew;
+    dp->size++;
+
     return 1;
 }
 
-int dlist_insert_prev(dlist **dp, int val) {
-    dlist *dpn = dlist_init(val);
-    if (dpn == NULL) {
+int dlist_insert_prev(dlist *dp, dlist_node **dnp, int val) {
+    dlist_node *dpnew = malloc(sizeof(*dpnew));
+    if (dpnew == NULL) {
         fprintf(stderr, "couldn't insert value: %d\n", val);
         return 0;
     }
-    dlist *dp_prev = (*dp)->prev;
-    /* TODO: wire new node into list */
+
+    /* wire new node into list */
+    dlist_node *tmp_prev = (*dnp)->prev;
+    dpnew->prev = tmp_prev;
+    dpnew->next = *dnp;
+    dpnew->value = val;
+
+    /* update head if necessary */
+    if (tmp_prev == NULL)
+        dp->head = dpnew;
+
+    (*dnp)->prev = dpnew;
+    dp->size++;
+
     return 1;
 }
 
-int dlist_get_current(dlist *dp, int *val) {
-    if (dp == NULL) return 0;
-    *val = dp->value;
+dlist_node *dlist_get_head(dlist *dp) {
+    if (dp == NULL) 
+        return NULL;
+    return dp->head;
+}
+
+dlist_node *dlist_get_tail(dlist *dp) {
+    if (dp == NULL) 
+        return NULL;
+    return dp->tail;
+}
+
+int dlist_remove_head(dlist *dp, int *ret) {
+    if (dp == NULL || dp->head == NULL)
+        return 0;
+
+    *ret = dp->head->value;
+    if (dp->head->next == NULL) {
+        free(dp->head);
+        dp->head = NULL;
+        dp->tail = NULL;
+        dp->size = 0;
+    } else {
+        dlist_node *tmp = dp->head;
+        dlist_node *tmp_next = dp->head->next;
+        tmp_next->prev = NULL;
+        free(tmp);
+        dp->head = tmp_next;
+        dp->size--;
+    }
+
     return 1;
 }
 
-int dlist_get_next(dlist *dp, int *val) {
-    if (dp == NULL) return 0;
-    if (dp->next == NULL) return -1;
-    *val = dp->next->value;
+int dlist_remove_tail(dlist *dp, int *ret) {
+    if (dp == NULL || dp->tail == NULL)
+        return 0;
+
+    *ret = dp->tail->value;
+    if (dp->tail->prev == NULL) {
+        free(dp->tail);
+        dp->head = NULL;
+        dp->tail = NULL;
+        dp->size = 0;
+    } else {
+        dlist_node *tmp = dp->tail;
+        dlist_node *tmp_prev = dp->tail->prev;
+        tmp_prev->next = NULL;
+        free(tmp);
+        dp->tail = tmp_prev;
+        dp->size--;
+    }
+
     return 1;
 }
 
-int dlist_get_prev(dlist *dp, int *val) {
-    if (dp == NULL) return 0;
-    if (dp->prev == NULL) return -1;
-    *val = dp->prev->value;
-    return 1;
-}
-
-int dlist_get_first(dlist *dp, int *val) {
-    if (dp == NULL) return 0;
-    *val = dp->value;
-    return 1;
-}
-
-int dlist_get_last(dlist *dp, int *val) {
-    if (dp == NULL) return 0;
-    *val = dp->tail->value;
-    return 1;
+int dlist_get_size(dlist *dp) {
+    if (dp == NULL)
+        return -1;
+    return dp->size;
 }
 
 void dlist_show(dlist *dp) {
+    if (dp == NULL)
+        return;
+
     printf("NULL");
-    while (dp) {
-        printf(" <- %d -> ", dp->value);
-        dp = dp->next;
+    dlist_node *tmp = dp->head;
+    while (tmp) {
+        printf(" <- %d -> ", tmp->value);
+        tmp = tmp->next;
     }
     puts("NULL");
 }
 
 void dlist_free(dlist *dp) {
-    dlist *tdp;
-    while (dp) {
-        tdp = dp->next;
-        free(dp);
-        dp = tdp;
+    if (dp == NULL)
+        return;
+    dlist_node *tmp_node;
+    while (dp->head) {
+        tmp_node = dp->head->next;
+        free(dp->head);
+        dp->head = tmp_node;
     }
+    free(dp);
 }
