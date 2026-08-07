@@ -4,7 +4,7 @@ CPPFLAGS = -Iinclude
 CFLAGS = -std=c23 -Wall -Wextra -Wpedantic -g 
 SANFLAGS = -fsanitize=address,undefined
 
-.PHONY: vector clean
+.PHONY: vector stack queue list dlist hashmap clean
 
 VECTOR = build/vector
 VECTOR_SRC = tests/test_vector.c src/vector.c
@@ -25,6 +25,10 @@ LIST_HDR = include/list.h
 DLIST = build/dlist
 DLIST_SRC = tests/test_dlist.c src/dlist.c
 DLIST_HDR = include/dlist.h
+
+HASHMAP = build/hashmap
+HASHMAP_SRC = tests/test_hashmap.c src/hashmap.c
+HASHMAP_HDR = include/hashmap.h
 
 vector: $(VECTOR)
 	./$(VECTOR)
@@ -60,6 +64,13 @@ dlist: $(DLIST)
 $(DLIST): $(DLIST_SRC) $(DLIST_HDR)
 	mkdir -p build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(SANFLAGS) $(DLIST_SRC) -o $(DLIST)
+
+hashmap: $(HASHMAP)
+	./$(HASHMAP)
+
+$(HASHMAP): $(HASHMAP_SRC) $(HASHMAP_HDR)
+	mkdir -p build
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(SANFLAGS) $(HASHMAP_SRC) -o $(HASHMAP)
 
 clean:
 	rm -rf build/*
