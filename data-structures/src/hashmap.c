@@ -1,9 +1,10 @@
 #include "hashmap.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 struct hashmap_node {
-    char *key;
+    const char *key;
     int value;
     hashmap_node *next;
 };
@@ -14,7 +15,7 @@ struct hashmap {
     size_t size;
 };
 
-size_t hash(char *key) {
+size_t hash(const char *key) {
     size_t val = 5381;
     size_t i;
     for (i = 0; key[i]; i++) {
@@ -24,14 +25,20 @@ size_t hash(char *key) {
 }
 
 hashmap *hashmap_init(size_t cap) {
+    if (cap == 0) {
+        fprintf(stderr, "hashmap_init: can't initiate hashmap with 0 capacity\n");
+        return NULL;
+    }
+
     hashmap *hm = malloc(sizeof(*hm));
     if (hm == NULL) {
         fprintf(stderr, "malloc: can't init hashmap\n");
         return NULL;
     }
 
-    hm->buckets = calloc(cap, sizeof(hm->buckets));
+    hm->buckets = calloc(cap, sizeof *hm->buckets);
     if (hm->buckets == NULL) {
+        free(hm);
         fprintf(stderr, "calloc: can't allocate buckets\n");
         return NULL;
     }
@@ -42,15 +49,24 @@ hashmap *hashmap_init(size_t cap) {
     return hm;
 }
 
-int hashmap_put(hashmap *hm, char *k, int val) {
-    if (hm->size + 1 > hm->capacity * 3 / 4) {
-        /* TODO: resize */
+int hashmap_put(hashmap *hm, const char *k, int val) {
+    size_t hashed = hash(k) % hm->capacity;
+    hashmap_node *node;
+
+    if (hm->buckets[hashed]) {
+        node = hm->buckets[hashed];
+        while (node) {
+            if (strcmp(k, node->key) == 0) {
+                node->value = val;
+                return 1;
+            }
+            node = node->next;
+        }
     }
 
-    size_t hashed = hash(k) % hm->capacity;
     hashmap_node *hm_node = malloc(sizeof(*hm_node));
     if (hm_node == NULL) {
-        fprintf(stderr, "malloc: can't put hashmap node with value %d\n", val);
+        fprintf(stderr, "malloc: can't add new node with value: %d\n", val);
         return 0;
     }
 
@@ -59,20 +75,64 @@ int hashmap_put(hashmap *hm, char *k, int val) {
         .value = val,
         .next = NULL,
     };
+
+    hm_node->next = hm->buckets[hashed];
     hm->buckets[hashed] = hm_node;
+
     hm->size++;
 
     return 1;
 }
 
-int hashmap_get(hashmap *hm, char *k, int *val) {
-    if (hm->capacity == 0)
+int hashmap_get(hashmap *hm, const char *k, int *val) {
+    if (hm == NULL || hm->capacity == 0)
         return 0;
 
     size_t hashed = hash(k) % hm->capacity;
-    *val = hm->buckets[hashed]->value;
+    if (hm->buckets[hashed]) {
+        hashmap_node *node = hm->buckets[hashed];
+        while (node) {
+            if (strcmp(k, node->key) == 0) {
+                *val = node->value;
+                return 1;
+            }
+            node = node->next;
+        }
+    }
 
-    return 1;
+    return 0;
+}
+
+int hashmap_remove(hashmap *hm, const char *k, int *val) {
+    if (hm == NULL || hm->capacity == 0)
+        return -1;
+
+    size_t hashed = hash(k) % hm->capacity;
+    if (hm->buckets[hashed]) {
+        hashmap_node *node = hm->buckets[hashed];
+        hashmap_node *prev = node;
+        while (node) {
+            if (strcmp(k, node->key) == 0) {
+                if (node == prev)
+                    hm->buckets[hashed] = node->next;
+                else 
+                    prev->next = node->next;
+
+                *val = node->value;
+                free(node);
+                hm->size--;
+                return 1;
+            }
+            prev = node;
+            node = node->next;
+        }
+    }
+
+    return 0;
+}
+
+size_t hashmap_size(const hashmap *hm) {
+    return hm->size;
 }
 
 void hashmap_free(hashmap *hm) {
@@ -81,8 +141,17 @@ void hashmap_free(hashmap *hm) {
 
     hashmap_node **buckets = hm->buckets;
     for (size_t i = 0; i < hm->capacity; i++) {
-        free(buckets[i]);
+        if (buckets[i]) {
+            hashmap_node *tmp = buckets[i];
+            hashmap_node *tmp_next;
+            while (tmp) {
+                tmp_next = tmp->next;
+                free(tmp);
+                tmp = tmp_next;
+            }
+        }
     }
+
     free(buckets);
     free(hm);
 }
