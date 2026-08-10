@@ -15,7 +15,7 @@ struct hashmap {
     size_t size;
 };
 
-size_t hash(const char *key) {
+static size_t hash(const char *key) {
     size_t val = 5381;
     size_t i;
     for (i = 0; key[i]; i++) {
@@ -50,6 +50,16 @@ hashmap *hashmap_init(size_t cap) {
 }
 
 int hashmap_put(hashmap *hm, const char *k, int val) {
+    if (hm == NULL) {
+        fprintf(stderr, "hashmap_put: hm is NULL\n");
+        return -1;
+    }
+
+    if (k == NULL) {
+        fprintf(stderr, "hashmap_put: k is NULL\n");
+        return -1;
+    }
+
     size_t hashed = hash(k) % hm->capacity;
     hashmap_node *node;
 
@@ -67,7 +77,7 @@ int hashmap_put(hashmap *hm, const char *k, int val) {
     hashmap_node *hm_node = malloc(sizeof(*hm_node));
     if (hm_node == NULL) {
         fprintf(stderr, "malloc: can't add new node with value: %d\n", val);
-        return 0;
+        return -1;
     }
 
     *hm_node = (hashmap_node){
@@ -84,9 +94,26 @@ int hashmap_put(hashmap *hm, const char *k, int val) {
     return 1;
 }
 
-int hashmap_get(hashmap *hm, const char *k, int *val) {
-    if (hm == NULL || hm->capacity == 0)
-        return 0;
+int hashmap_get(const hashmap *hm, const char *k, int *val) {
+    if (hm == NULL) {
+        fprintf(stderr, "hashmap_get: hm is NULL\n");
+        return -1;
+    }
+
+    if (hm->capacity == 0) {
+        fprintf(stderr, "hashmap_get: hm->capacity is 0\n");
+        return -1;
+    }
+
+    if (k == NULL) {
+        fprintf(stderr, "hashmap_get: k is NULL\n");
+        return -1;
+    }
+
+    if (val == NULL) {
+        fprintf(stderr, "hashmap_get: val is NULL\n");
+        return -1;
+    }
 
     size_t hashed = hash(k) % hm->capacity;
     if (hm->buckets[hashed]) {
@@ -103,9 +130,22 @@ int hashmap_get(hashmap *hm, const char *k, int *val) {
     return 0;
 }
 
+/* will discard value if val == NULL */
 int hashmap_remove(hashmap *hm, const char *k, int *val) {
-    if (hm == NULL || hm->capacity == 0)
+    if (hm == NULL) {
+        fprintf(stderr, "hashmap_remove: hm is NULL\n");
         return -1;
+    }
+
+    if (hm->capacity == 0) {
+        fprintf(stderr, "hashmap_remove: hm->capacity is 0\n");
+        return -1;
+    }
+
+    if (k == NULL) {
+        fprintf(stderr, "hashmap_remove: k is NULL\n");
+        return -1;
+    }
 
     size_t hashed = hash(k) % hm->capacity;
     if (hm->buckets[hashed]) {
@@ -118,7 +158,9 @@ int hashmap_remove(hashmap *hm, const char *k, int *val) {
                 else 
                     prev->next = node->next;
 
-                *val = node->value;
+                if (val != NULL)
+                    *val = node->value;
+
                 free(node);
                 hm->size--;
                 return 1;
@@ -132,6 +174,11 @@ int hashmap_remove(hashmap *hm, const char *k, int *val) {
 }
 
 size_t hashmap_size(const hashmap *hm) {
+    if (hm == NULL) {
+        fprintf(stderr, "hashmap_size: hm is NULL\n");
+        return 0;
+    }
+
     return hm->size;
 }
 
