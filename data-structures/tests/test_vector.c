@@ -1,137 +1,97 @@
 #include "vector.h"
-#include "stdio.h"
-#include "assert.h"
+#include <stdio.h>
+#include <assert.h>
 
 int main(void) {
-#if 0
-    puts("=====VEC==========");
-    vector *vec = vector_init(5);
-    int status;
-    for (size_t i = 0; i < 10; i++) {
-        status = vector_append(vec, i);
-        assert(status == 1);
+#if 1
+    puts("=====TEST VEC_1: START======");
+    int out_int;
+    size_t out_size;
+    vector *vp = vector_init(10);
+    assert(vp != NULL);
+    assert(vector_capacity(vp, &out_size) == 1);
+    assert(out_size == 10);
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 0);
+
+    for (int i = 1; i < 5; i++)
+        assert(vector_append(vp, (i%4)*i) == 1);
+
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 4);
+    size_t i;
+    for (i = 0; i < out_size; i++) {
+        assert(vector_get(vp, i, &out_int) == 1);
+        printf("vector_get: %d\n", out_int);
     }
+    assert(vector_show(vp) == 1);
 
-    assert(11 == vector_capacity(vec));
-    assert(10 == vector_size(vec));
-    vector_show(vec);
+    while (i > 0) {
+        assert(vector_remove(vp, 0, &out_int) == 1);
+        printf("vector_remove: %d\n", out_int);
+        i--;
+    }
+    assert(vector_show(vp) == 1);
+    assert(vector_remove(vp, 1, &out_int) == -1);
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 0);
+    assert(vector_get(vp, 2, &out_int) == -1);
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 0);
 
-    vector_append(vec, 10);
-    assert(11 == vector_capacity(vec));
-    assert(11 == vector_size(vec));
-    vector_show(vec);
-    vector_insert(vec, 5, 100);
-    vector_show(vec);
+    assert(vector_insert(vp, 0, 5) == 1);
+    assert(vector_insert(vp, 1, 55) == 1);
+    assert(vector_get(vp, 1, &out_int) == 1);
+    assert(out_int == 55);
+    assert(vector_remove(vp, 1, &out_int) == 1);
+    assert(out_int == 55);
+    assert(vector_get(vp, 1, &out_int) == -1);
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 1);
+    assert(vector_show(vp) == 1);
 
-    vector_append(vec, 11);
-    assert(23 == vector_capacity(vec));
-    assert(13 == vector_size(vec));
-    vector_insert(vec, 13, 1000);
-    assert(1000 == vector_get(vec, 13));
-    vector_show(vec);
-    int removed;
-    vector_remove(vec, 0, &removed);
-    vector_show(vec);
-    vector_remove(vec, vector_size(vec)-2, &removed);
-    vector_show(vec);
-    vector_remove(vec, vector_size(vec)-2, &removed);
-    vector_show(vec);
-    vector_remove(vec, 4, &removed);
-    vector_show(vec);
-    assert(10 == vector_size(vec));
-    vector_free(vec);
+    assert(vector_capacity(vp, &out_size) == 1);
+    assert(out_size == 2);
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 1);
+    assert(vector_append(vp, 13) == 1);
+    assert(vector_get(vp, 1, &out_int) == 1);
+    assert(out_int == 13);
+    assert(vector_show(vp) == 1);
 
-#endif /* test vec: append, vector_capacity/inuse vector_show +
-     * remove */
+    assert(vector_capacity(vp, &out_size) == 1);
+    assert(out_size == 2);
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 2);
+
+    assert(vector_append(vp, 23) == 1);
+    assert(vector_capacity(vp, &out_size) == 1);
+    assert(out_size == 5);
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 3);
+    assert(vector_show(vp) == 1);
+    assert(vector_pop(vp, &out_int) == 1);
+    assert(out_int == 23);
+    assert(vector_pop(vp, &out_int) == 1);
+    assert(out_int == 13);
+    assert(vector_pop(vp, &out_int) == 1);
+    assert(out_int == 5);
+    assert(vector_pop(vp, &out_int) == -1);
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 0);
+
+    assert(vector_free(vp) == 1);
+    puts("=====TEST VEC_1: SUCESS=====");
+    return 0;
+#endif // VEC_1
     
 #if 0
-    puts("=====VEC1=========");
-    vector *vec1 = vector_init(10);
-    vector_append(vec1, 5);
-    vector_append(vec1, 10);
-    vector_append(vec1, 15);
-    assert(10 == vector_capacity(vec1));
-    assert(3 == vector_size(vec1));
-    vector_show(vec1);
-    int sum = 0;
-    for (int i = 0; i < 3; i++) {
-        sum += vector_get(vec1, i);
-    }
-    assert(sum == 30);
-    vector_insert(vec1, 0, sum);
-    assert(30 == vector_get(vec1, 0));
-    vector_show(vec1);
-    vector_free(vec1);
-#endif /* test vec1: all above + vector_get - remove */
+    puts("=====TEST VEC_2: START======");
+    puts("=====TEST VEC_2: SUCESS=====")
+#endif // VEC_2
 
 #if 0
-    puts("=====VEC2=========");
-//    int removed;
-    vector *vec2 = vector_init(5);
-    for (size_t i = 0; i < 5; i++) {
-        vector_append(vec2, i * 3 + 1);
-    }
-    vector_show(vec2);
-    printf("%zu\n", vector_capacity(vec2));
-    vector_remove(vec2, 1, &removed);
-    vector_show(vec2);
-    vector_remove(vec2, vector_size(vec2)-1, &removed);
-    vector_show(vec2);
-    vector_remove(vec2, vector_size(vec2)-1, &removed);
-    vector_show(vec2);
-    printf("%zu\n", vector_size(vec2));
-    printf("%zu\n", vector_capacity(vec2));
-    vector_remove(vec2, vector_size(vec2)-1, &removed);
-    vector_show(vec2);
-    printf("%zu\n", vector_size(vec2));
-    printf("%zu\n", vector_capacity(vec2));
-
-    //vector_remove(vec2, vector_size(vec2)-1, &removed);
-    vector_remove(vec2, vector_size(vec2)-1, &removed);
-    vector_show(vec2);
-    printf("%zu\n", vector_size(vec2));
-    printf("%zu\n", vector_capacity(vec2));
-    vector_append(vec2, 1);
-    vector_show(vec2);
-    vector_append(vec2, 1);
-    vector_show(vec2);
-    printf("%zu\n", vector_size(vec2));
-    printf("%zu\n", vector_capacity(vec2));
-    vector_append(vec2, 1);
-    vector_show(vec2);
-    printf("%zu\n", vector_size(vec2));
-    printf("%zu\n", vector_capacity(vec2));
-    vector_append(vec2, 1);
-    vector_show(vec2);
-    printf("%zu\n", vector_size(vec2));
-    printf("%zu\n", vector_capacity(vec2));
-    vector_free(vec2);
-#endif
-
-#if 1
-    int popped;
-    vector *vec3 = vector_init(5);
-    for (int i = 0; i < 5; i++) {
-        vector_append(vec3, i * 2 + 1);
-    }
-    vector_show(vec3);
-    vector_pop(vec3, &popped);
-    assert(9 == popped);
-    vector_show(vec3);
-    vector_pop(vec3, &popped);
-    assert(7 == popped);
-    vector_show(vec3);
-    vector_pop(vec3, &popped);
-    assert(5 == popped);
-    vector_show(vec3);
-    vector_pop(vec3, &popped);
-    assert(3 == popped);
-    vector_show(vec3);
-    vector_pop(vec3, &popped);
-    assert(1 == popped);
-    vector_show(vec3);
-    assert(vector_size(vec3) == 0);
-
-    vector_free(vec3);
-#endif /* test vector_pop() */
+    puts("=====TEST VEC_3: START======");
+    puts("=====TEST VEC_3: SUCCESS======");
+#endif // VEC_3
 }

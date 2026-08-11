@@ -3,6 +3,25 @@
 #include <stdio.h>
 #include <string.h>
 
+#define VECTOR_NULL_ERROR(prog, arg, ret) \
+    do { \
+        fprintf(stderr, "[ERROR] vector_%s: %s is NULL\n", prog, arg); \
+        return ret; \
+    } while (0)
+
+#define VECTOR_BOUND_ERROR(prog, ind, bound, ret) \
+    do { \
+        fprintf(stderr, "[ERROR] vector_%s: %zu exceeds the upper bound %zu\n", \
+                prog, ind, bound); \
+        return ret; \
+    } while (0)
+
+#define VECTOR_EMPTY_ERROR(prog) \
+    do { \
+        fprintf(stderr, "[ERROR] vector_%s: %s from empty vector\n", prog, prog); \
+        return -1; \
+    } while (0)
+
 struct vector {
     int     *arr;
     size_t  capacity;
@@ -11,12 +30,13 @@ struct vector {
 
 vector *vector_init(size_t arrsize) {
     vector *vecptr = malloc(sizeof *vecptr);
-    if (vecptr == NULL) return NULL;
+    if (vecptr == NULL)
+        VECTOR_NULL_ERROR("init", "vecptr", NULL);
 
     vecptr->arr = malloc(sizeof(int) * arrsize);
     if (vecptr->arr == NULL) {
         free(vecptr);
-        return NULL;
+        VECTOR_NULL_ERROR("init", "vecptr->arr", NULL);
     }
 
     memset(vecptr->arr, 0, sizeof(int) * arrsize);
@@ -31,44 +51,34 @@ static int *vector_grow(vector *vecptr) {
 
     int *new_arr;
     new_arr = realloc(vecptr->arr, sizeof(int) * new_capacity);
-    if (new_arr == NULL) {
-        return 0;
-    }
+    if (new_arr == NULL)
+        VECTOR_NULL_ERROR("grow", "new_arr", NULL);
+
     vecptr->capacity = new_capacity;
     memset(new_arr + old_capacity, 0, sizeof(int) * (vecptr->capacity - old_capacity));
-
     return new_arr;
 }
 
 static int *vector_shrink(vector *vecptr) {
     size_t new_capacity = vecptr->capacity / 2 + 1;
-
     int *new_arr;
-    new_arr = realloc(vecptr->arr, sizeof(int) * new_capacity);
-    if (new_arr == NULL) {
-        return 0;
-    }
-    vecptr->capacity = new_capacity;
 
+    new_arr = realloc(vecptr->arr, sizeof(int) * new_capacity);
+    if (new_arr == NULL)
+        VECTOR_NULL_ERROR("shrink", "new_arr", NULL);
+
+    vecptr->capacity = new_capacity;
     return new_arr;
 }
 
-static void vector_bound_error(size_t ind) {
-    fprintf(stderr, "Index error: %zu outside of vector range\n", ind);
-    exit(EXIT_FAILURE);
-}
-
-static void vector_empty_error(void) {
-    fprintf(stderr, "Can't remove elements from empty vector: []\n");
-    exit(EXIT_FAILURE);
-}
-
 int vector_append(vector *vecptr, int x) {
+    if (vecptr == NULL)
+        VECTOR_NULL_ERROR("append", "vecptr", -1);
+
     if (vecptr->size == vecptr->capacity) {
         int *new_arr = vector_grow(vecptr);
-        if (new_arr == NULL) {
-            return 0;
-        }
+        if (new_arr == NULL)
+            VECTOR_NULL_ERROR("append", "new_arr", -1);
         vecptr->arr = new_arr;
     }
 
@@ -77,21 +87,21 @@ int vector_append(vector *vecptr, int x) {
 }
 
 int vector_insert(vector *vecptr, size_t ind, int x) {
-    if (ind > vecptr->size) {
-        vector_bound_error(ind);
-    }
-    
+    if (vecptr == NULL)
+        VECTOR_NULL_ERROR("insert", "vecptr", -1);
+
+    if (ind > vecptr->size)
+        VECTOR_BOUND_ERROR("insert", ind, vecptr->size, -1);
+
     if (vecptr->size == vecptr->capacity) {
         int *new_arr = vector_grow(vecptr);
-        if (new_arr == NULL) {
-            return 0;
-        }
+        if (new_arr == NULL)
+            VECTOR_NULL_ERROR("insert", "new_arr", -1);
         vecptr->arr = new_arr;
     }
 
-    for (size_t i = vecptr->size; i > ind; i--) {
+    for (size_t i = vecptr->size; i > ind; i--)
         *(vecptr->arr + i) = *(vecptr->arr + i - 1);
-    }
 
     *(vecptr->arr + ind) = x;
     vecptr->size++;
@@ -99,63 +109,106 @@ int vector_insert(vector *vecptr, size_t ind, int x) {
 }
 
 int vector_remove(vector *vecptr, size_t ind, int *rem_val) {
-    if (vecptr->size == 0) {
-        vector_empty_error();
-    }
-    if (ind >= vecptr->size) {
-        vector_bound_error(ind);
-    }
+    if (vecptr == NULL)
+        VECTOR_NULL_ERROR("remove", "vecptr", -1);
+
+    if (rem_val == NULL)
+        VECTOR_NULL_ERROR("remove", "rem_val", -1);
+
+    if (vecptr->size == 0)
+        VECTOR_EMPTY_ERROR("remove");
+
+    if (ind >= vecptr->size)
+        VECTOR_BOUND_ERROR("remove", ind, vecptr->size, -1);
 
     *rem_val = *(vecptr->arr + ind);
-    for (size_t i = ind; i < vecptr->size-1; i++) {
+    for (size_t i = ind; i < vecptr->size-1; i++)
         *(vecptr->arr + i) = *(vecptr->arr + i + 1);
-    }
-    vecptr->size--;
 
+    vecptr->size--;
     if (vecptr->size * 2 < vecptr->capacity) {
         int *new_arr = vector_shrink(vecptr);
-        if (new_arr != NULL) {
+        if (new_arr != NULL)
             vecptr->arr = new_arr;
-        }
     }
 
     return 1;
 }
 
 int vector_pop(vector *vecptr, int *popped) {
-    if (vecptr->size == 0) vector_empty_error();
+    if (vecptr == NULL)
+        VECTOR_NULL_ERROR("pop", "vecptr", -1);
+
+    if (popped == NULL)
+        VECTOR_NULL_ERROR("pop", "popped", -1);
+
+    if (vecptr->size == 0) 
+        VECTOR_EMPTY_ERROR("pop");
+
     return vector_remove(vecptr, vecptr->size-1, popped);
 }
 
-int vector_get(vector *vecptr, size_t ind) {
-    if (ind >= vecptr->size) {
-        vector_bound_error(ind);
-    }
-    return vecptr->arr[ind];
+int vector_get(vector *vecptr, size_t ind, int *val) {
+    if (vecptr == NULL)
+        VECTOR_NULL_ERROR("get", "vecptr", -1);
+
+    if (val == NULL)
+        VECTOR_NULL_ERROR("get", "val", -1);
+
+    if (ind >= vecptr->size)
+        VECTOR_BOUND_ERROR("get", ind, vecptr->size, -1);
+
+
+    *val = vecptr->arr[ind];
+    return 1;
 }
 
-size_t vector_capacity(vector *vecptr) {
-    return vecptr->capacity;
+int vector_capacity(vector *vecptr, size_t *cap) {
+    if (vecptr == NULL)
+        VECTOR_NULL_ERROR("capacity", "vecptr", -1);
+
+    if (cap == NULL)
+        VECTOR_NULL_ERROR("capacity", "cap", -1);
+
+    *cap = vecptr->capacity;
+    return 1;
 }
 
-size_t vector_size(vector *vecptr) {
-    return vecptr->size;
+int vector_size(vector *vecptr, size_t *siz) {
+    if (vecptr == NULL)
+        VECTOR_NULL_ERROR("size", "vecptr", -1);
+
+    if (siz == NULL)
+        VECTOR_NULL_ERROR("size", "siz", -1);
+
+    *siz = vecptr->size;
+    return 1;
 }
 
-void vector_show(vector *vec) {
+int vector_show(vector *vec) {
+    if (vec == NULL)
+        VECTOR_NULL_ERROR("show", "vec", -1);
+
     if (vec->size == 0) {
         puts("[]");
     } else if (vec->size > 0) {
         printf("[");
         size_t i;
+        int val;
         for (i = 0; i < vec->size; i++) {
-            printf(i ? ", %d" : "%d", vector_get(vec, i));
+            if (vector_get(vec, i, &val) == 1)
+                printf(i ? ", %d" : "%d", val);
         }
         puts("]");
     }
+    return 1;
 }
 
-void vector_free(vector *vecptr) {
+int vector_free(vector *vecptr) {
+    if (vecptr == NULL)
+        VECTOR_NULL_ERROR("free", "vecptr", -1);
+
     free(vecptr->arr);
     free(vecptr);
+    return 1;
 }
