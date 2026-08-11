@@ -30,6 +30,10 @@ HASHMAP = build/hashmap
 HASHMAP_SRC = tests/test_hashmap.c src/hashmap.c
 HASHMAP_HDR = include/hashmap.h
 
+HEAP = build/heap
+HEAP_SRC = tests/test_heap.c src/heap.c src/vector.c
+HEAP_HDR = include/heap.h include/vector.h
+
 vector: $(VECTOR)
 	./$(VECTOR)
 
@@ -71,6 +75,13 @@ hashmap: $(HASHMAP)
 $(HASHMAP): $(HASHMAP_SRC) $(HASHMAP_HDR)
 	mkdir -p build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(SANFLAGS) $(HASHMAP_SRC) -o $(HASHMAP)
+
+heap: $(HEAP)
+	./$(HEAP)
+
+$(HEAP): $(HEAP_SRC) $(HEAP_HDR)
+	mkdir -p build
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(SANFLAGS) $(HEAP_SRC) -o $(HEAP)
 
 clean:
 	rm -rf build/*
