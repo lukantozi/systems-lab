@@ -12,6 +12,7 @@ int stack_is_full(stack *);
 int stack_push(stack *, int);
 int stack_pop(stack *, int *);
 int stack_peek(stack *, int *);
+int stack_find_min(stack *, int *);
 int stack_show(stack *);
 int stack_free(stack *);
 
