@@ -26,11 +26,46 @@ int main(void) {
     }
     assert(vector_show(vp) == 1);
 
-    while (i > 0) {
-        assert(vector_remove(vp, 0, &out_int) == 1);
-        printf("vector_remove: %d\n", out_int);
-        i--;
-    }
+    assert(vector_remove(vp, 0, &out_int) == 1);
+    assert(vector_capacity(vp, &out_size) == 1);
+    printf("vector_remove: %d\n", out_int);
+    assert(vector_show(vp) == 1);
+    printf("capacity: %zu\n", out_size);
+    assert(out_size == 10);
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 3);
+    printf("size: %zu\n", out_size);
+
+    assert(vector_remove(vp, 0, &out_int) == 1);
+    assert(vector_capacity(vp, &out_size) == 1);
+    printf("vector_remove: %d\n", out_int);
+    assert(vector_show(vp) == 1);
+    printf("capacity: %zu\n", out_size);
+    assert(out_size == 10);
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 2);
+    printf("size: %zu\n", out_size);
+
+    assert(vector_remove(vp, 0, &out_int) == 1);
+    assert(vector_capacity(vp, &out_size) == 1);
+    printf("vector_remove: %d\n", out_int);
+    assert(vector_show(vp) == 1);
+    printf("capacity: %zu\n", out_size);
+    assert(out_size == 5);
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 1);
+    printf("size: %zu\n", out_size);
+
+    assert(vector_remove(vp, 0, &out_int) == 1);
+    assert(vector_capacity(vp, &out_size) == 1);
+    printf("vector_remove: %d\n", out_int);
+    assert(vector_show(vp) == 1);
+    printf("capacity: %zu\n", out_size);
+    assert(out_size == 2);
+    assert(vector_size(vp, &out_size) == 1);
+    assert(out_size == 0);
+    printf("size: %zu\n", out_size);
+
     assert(vector_show(vp) == 1);
     assert(vector_remove(vp, 1, &out_int) == -1);
     assert(vector_size(vp, &out_size) == 1);
@@ -51,6 +86,7 @@ int main(void) {
     assert(vector_show(vp) == 1);
 
     assert(vector_capacity(vp, &out_size) == 1);
+    printf("capacity: %zu\n", out_size);
     assert(out_size == 2);
     assert(vector_size(vp, &out_size) == 1);
     assert(out_size == 1);
@@ -66,7 +102,7 @@ int main(void) {
 
     assert(vector_append(vp, 23) == 1);
     assert(vector_capacity(vp, &out_size) == 1);
-    assert(out_size == 5);
+    assert(out_size == 4);
     assert(vector_size(vp, &out_size) == 1);
     assert(out_size == 3);
     assert(vector_show(vp) == 1);
@@ -82,12 +118,45 @@ int main(void) {
 
     assert(vector_free(vp) == 1);
     puts("=====TEST VEC_1: SUCESS=====");
-    return 0;
+    putchar('\n');
 #endif // VEC_1
     
-#if 0
+#if 1
     puts("=====TEST VEC_2: START======");
-    puts("=====TEST VEC_2: SUCESS=====")
+    assert(vector_init(0) == NULL);
+    vector *vp1 = vector_init(8);
+    assert(vp1 != NULL);
+    for (size_t i = 1; i < 4; i++)
+        assert(vector_append(vp1, i) == 1);
+
+    assert(vector_show(vp1) == 1);
+    assert(vector_size(vp1, &out_size) == 1);
+    printf("size: %zu\n", out_size);
+    assert(out_size == 3);
+    assert(vector_capacity(vp1, &out_size) == 1);
+    printf("capacity: %zu\n", out_size);
+    assert(out_size == 8);
+
+    assert(vector_pop(vp1, &out_int) == 1);
+    assert(vector_show(vp1) == 1);
+    assert(vector_size(vp1, &out_size) == 1);
+    printf("size: %zu\n", out_size);
+    assert(out_size == 2);
+    assert(vector_capacity(vp1, &out_size) == 1);
+    printf("capacity: %zu\n", out_size);
+    assert(out_size == 8);
+
+    assert(vector_pop(vp1, &out_int) == 1);
+    assert(vector_show(vp1) == 1);
+    assert(vector_size(vp1, &out_size) == 1);
+    printf("size: %zu\n", out_size);
+    assert(out_size == 1);
+    assert(vector_capacity(vp1, &out_size) == 1);
+    printf("capacity: %zu\n", out_size);
+    assert(out_size == 4);
+
+    assert(vector_free(vp1) == 1);
+    puts("=====TEST VEC_2: SUCESS=====");
 #endif // VEC_2
 
 #if 0

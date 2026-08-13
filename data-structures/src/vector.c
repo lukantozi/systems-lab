@@ -29,6 +29,11 @@ struct vector {
 };
 
 vector *vector_init(size_t arrsize) {
+    if (arrsize == 0) {
+        fprintf(stderr, "[ERROR] vector_init: arrsize is 0\n");
+        return NULL;
+    }
+
     vector *vecptr = malloc(sizeof *vecptr);
     if (vecptr == NULL)
         VECTOR_NULL_ERROR("init", "vecptr", NULL);
@@ -47,7 +52,7 @@ vector *vector_init(size_t arrsize) {
 
 static int *vector_grow(vector *vecptr) {
     size_t old_capacity = vecptr->capacity;
-    size_t new_capacity = vecptr->capacity * 2 + 1;
+    size_t new_capacity = vecptr->capacity * 2;
 
     int *new_arr;
     new_arr = realloc(vecptr->arr, sizeof(int) * new_capacity);
@@ -60,7 +65,8 @@ static int *vector_grow(vector *vecptr) {
 }
 
 static int *vector_shrink(vector *vecptr) {
-    size_t new_capacity = vecptr->capacity / 2 + 1;
+    size_t half_capacity = vecptr->capacity / 2;
+    size_t new_capacity = half_capacity > 0 ? half_capacity : 1;
     int *new_arr;
 
     new_arr = realloc(vecptr->arr, sizeof(int) * new_capacity);
@@ -126,7 +132,7 @@ int vector_remove(vector *vecptr, size_t ind, int *rem_val) {
         *(vecptr->arr + i) = *(vecptr->arr + i + 1);
 
     vecptr->size--;
-    if (vecptr->size * 2 < vecptr->capacity) {
+    if (vecptr->size < vecptr->capacity / 4) {
         int *new_arr = vector_shrink(vecptr);
         if (new_arr != NULL)
             vecptr->arr = new_arr;
