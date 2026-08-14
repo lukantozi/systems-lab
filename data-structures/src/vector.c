@@ -169,6 +169,23 @@ int vector_get(vector *vecptr, size_t ind, int *val) {
     return 1;
 }
 
+int vector_swap(vector *vecptr, size_t ind1, size_t ind2) {
+    if (vecptr == NULL)
+        VECTOR_NULL_ERROR("swap", "vecptr", -1);
+
+    if (ind1 >= vecptr->size)
+        VECTOR_BOUND_ERROR("swap", ind1, vecptr->size, -1);
+
+    if (ind2 >= vecptr->size)
+        VECTOR_BOUND_ERROR("swap", ind2, vecptr->size, -1);
+
+    int tmp = vecptr->arr[ind1];
+    vecptr->arr[ind1] = vecptr->arr[ind2];
+    vecptr->arr[ind2] = tmp;
+
+    return 1;
+}
+
 int vector_capacity(vector *vecptr, size_t *cap) {
     if (vecptr == NULL)
         VECTOR_NULL_ERROR("capacity", "vecptr", -1);

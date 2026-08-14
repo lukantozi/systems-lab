@@ -11,6 +11,7 @@ int vector_insert(vector *, size_t, int);
 int vector_remove(vector *, size_t, int *);
 int vector_pop(vector *, int *);
 int vector_get(vector *, size_t, int *);
+int vector_swap(vector *, size_t, size_t);
 int vector_capacity(vector *, size_t *);
 int vector_size(vector *, size_t *);
 int vector_show(vector *);
