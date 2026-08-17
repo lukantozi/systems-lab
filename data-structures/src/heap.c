@@ -14,7 +14,46 @@ struct heap {
     vector *storage;
 };
 
-/* returns NULL if vector allocation failed */
+static int heapify_down(heap *hpt, size_t i, size_t siz) {
+    size_t left, right, smallest;
+    int left_val, right_val, smallest_val;
+    while (1) {
+        left  = 2 * i + 1;
+        right = 2 * i + 2;
+        smallest = i;
+
+        if (vector_get(hpt->storage, smallest, &smallest_val) == -1)
+            return -1;
+
+        if (left < siz) {
+            if (vector_get(hpt->storage, left, &left_val) == -1)
+                return -1;
+            if (left_val < smallest_val) {
+                smallest = left;
+                smallest_val = left_val;
+            }
+        }
+
+        if (right < siz) {
+            if (vector_get(hpt->storage, right, &right_val) == -1)
+                return -1;
+            if (right_val < smallest_val) {
+                smallest = right;
+                smallest_val = right_val;
+            }
+        }
+
+        if (smallest != i) {
+            if (vector_swap(hpt->storage, i, smallest) == -1)
+                return -1;
+            i = smallest;
+        } else {
+            break;
+        }
+    }
+    return 1;
+}
+
 heap *heap_init(size_t cap) {
     heap *hpt = malloc(sizeof(*hpt));
     if (hpt == NULL)
@@ -94,8 +133,11 @@ int heap_remove(heap *hpt, int val, int *ret) {
         return -1;
     if (vector_swap(hpt->storage, siz-1, i) == -1)
         return -1;
-    if (vector_pop(hpt->storage, ret) == -1)
+    if (vector_pop(hpt->storage, ret) == -1) {
+        if (vector_swap(hpt->storage, siz-1, i) == -1)
+            return -1;
         return -1;
+    }
 
     siz--;
     int above;
@@ -117,42 +159,8 @@ int heap_remove(heap *hpt, int val, int *ret) {
             i = (i - 1) / 2;
         } while (i > 0);
     } else {
-        size_t left, right, smallest;
-        int left_val, right_val, smallest_val;
-        while (1) {
-            left  = 2 * i + 1;
-            right = 2 * i + 2;
-            smallest = i;
-
-            if (vector_get(hpt->storage, smallest, &smallest_val) == -1)
-                return -1;
-
-            if (left < siz) {
-                if (vector_get(hpt->storage, left, &left_val) == -1)
-                    return -1;
-                if (left_val < smallest_val) {
-                    smallest = left;
-                    smallest_val = left_val;
-                }
-            }
-
-            if (right < siz) {
-                if (vector_get(hpt->storage, right, &right_val) == -1)
-                    return -1;
-                if (right_val < smallest_val) {
-                    smallest = right;
-                    smallest_val = right_val;
-                }
-            }
-
-            if (smallest != i) {
-                if (vector_swap(hpt->storage, i, smallest) == -1)
-                    return -1;
-                i = smallest;
-            } else {
-                break;
-            }
-        }
+        if (heapify_down(hpt, i, siz) == -1)
+            return -1;
     }
 
     return 1;
@@ -166,6 +174,38 @@ int heap_top(heap *hpt, int *pkd) {
         HEAP_NULL_ERROR("peek", "pkd", -1);
 
     return vector_get(hpt->storage, 0, pkd);
+}
+
+int heap_pop(heap *hpt, int *popped) {
+    if (hpt == NULL)
+        HEAP_NULL_ERROR("pop", "hpt", -1);
+
+    if (popped == NULL)
+        HEAP_NULL_ERROR("pop", "popped", -1);
+
+    size_t siz;
+    if (vector_size(hpt->storage, &siz) == -1)
+        return -1;
+
+    if (siz == 0)
+        return -1;
+
+    if (vector_swap(hpt->storage, 0, siz-1) == -1)
+        return -1;
+
+    if (vector_pop(hpt->storage, popped) == -1) {
+        if (vector_swap(hpt->storage, 0, siz-1) == -1)
+            return -1;
+        return -1;
+    }
+
+    siz--;
+    if (siz > 0) {
+        if (heapify_down(hpt, 0, siz) == -1)
+            return -1;
+    }
+
+    return 1;
 }
 
 int heap_size(heap *hpt, size_t *siz) {
