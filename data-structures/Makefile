@@ -34,6 +34,10 @@ HEAP = build/heap
 HEAP_SRC = tests/test_heap.c src/heap.c src/vector.c
 HEAP_HDR = include/heap.h include/vector.h
 
+BST = build/bst
+BST_SRC = tests/test_bst.c src/bst.c
+BST_HDR = include/bst.h
+
 vector: $(VECTOR)
 	./$(VECTOR)
 
@@ -82,6 +86,13 @@ heap: $(HEAP)
 $(HEAP): $(HEAP_SRC) $(HEAP_HDR)
 	mkdir -p build
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(SANFLAGS) $(HEAP_SRC) -o $(HEAP)
+
+bst: $(BST)
+	./$(BST)
+
+$(BST): $(BST_SRC) $(BST_HDR)
+	mkdir -p build
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(SANFLAGS) $(BST_SRC) -o $(BST)
 
 clean:
 	rm -rf build/*
