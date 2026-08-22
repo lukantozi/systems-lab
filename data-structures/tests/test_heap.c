@@ -102,6 +102,24 @@ int main(void) {
     assert(heap_size(hp, &out_size) == 1);
     assert(out_size == 1);
 
+    assert(heap_push(hp, 9) == 1);
+    assert(heap_push(hp, 3) == 1);
+    assert(heap_push(hp, 12) == 1);
+    assert(heap_push(hp, 4) == 1);
+    assert(heap_push(hp, 2) == 1);
+    assert(heap_push(hp, 16) == 1);
+    assert(heap_push(hp, 5) == 1);
+    assert(heap_size(hp, &out_size) == 1);
+    assert(heap_show(hp) == 1);
+
+    /* heapsort */
+    size_t i;
+    for (i = 0; i < out_size; i++) {
+        assert(heap_pop(hp, &out_int));
+        printf("%d ", out_int);
+    }
+    putchar('\n');
+
     heap_free(hp);
     puts("=====TEST HEAP_1: SUCESS=====");
     return 0;

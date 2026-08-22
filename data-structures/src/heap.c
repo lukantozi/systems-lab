@@ -81,20 +81,18 @@ int heap_push(heap *hpt, int val) {
         return -1;
 
     int above;
-    if (ind > 0) {
-        do {
-            if (vector_get(hpt->storage, (ind - 1) / 2, &above) == -1)
+    while (ind > 0) {
+        if (vector_get(hpt->storage, (ind - 1) / 2, &above) == -1)
+            return -1;
+
+        if (above > val) {
+            if (vector_swap(hpt->storage, ind, (ind - 1) / 2)  == -1)
                 return -1;
+        } else {
+            return 1;
+        }
 
-            if (above > val) {
-                if (vector_swap(hpt->storage, ind, (ind - 1) / 2)  == -1)
-                    return -1;
-            } else {
-                return 1;
-            }
-
-            ind = (ind - 1) / 2;
-        } while (ind > 0);
+        ind = (ind - 1) / 2;
     }
 
     return 1;
