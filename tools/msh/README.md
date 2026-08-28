@@ -7,6 +7,12 @@ It is not intended to replace a real shell. The goal is to understand
 how a shell reads commands, creates processes, executes programs, and
 connects them with pipes.
 
+## Project status
+
+This directory preserves the original `msh` implementation developed during the
+systems-lab shell milestone. Active development and fixes continue in
+[`lukantozi/msh`](https://github.com/lukantozi/msh).
+
 ## Build
 
 ```sh
