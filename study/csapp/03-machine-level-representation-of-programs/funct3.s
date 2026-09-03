@@ -1,0 +1,17 @@
+funct3:
+    vmovss      (%rdx), %xmm1
+    vcvtsi2sd   (%rdi), %xmm2, %xmm2
+    vucomisd     %xmm2, %xmm0
+    jbe         .L8
+    vcvtsi2ssq   %rsi, %xmm0, %xmm0
+    vmulss       %xmm1, %xmm0, %xmm1
+    vunpcklps    %xmm1, %xmm1, %xmm1
+    vcvtps2pd    %xmm1, %xmm0
+    ret
+.L8:
+    vaddss       %xmm1, %xmm1, %xmm1
+    vcvtsi2ssq   %rsi, %xmm0, %xmm0
+    vaddss       %xmm1, %xmm0, %xmm0
+    vunpcklps    %xmm0, %xmm0, %xmm0
+    vcvtps2pd    %xmm0, %xmm0
+    ret
