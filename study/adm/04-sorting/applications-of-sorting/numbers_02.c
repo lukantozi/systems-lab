@@ -38,16 +38,26 @@ static int compar(const void *p1, const void *p2) {
     int *v1 = (int *) p1;
     int *v2 = (int *) p2;
 
-    return *v1 - *v2;
+    return (*v1 > *v2) - (*v2 - *v1);
 }
 
-/* TODO: c) minimizes |x - y| (x != y) form unsorted array in O(nlogn) */
+/* c) minimizes |x - y| (x != y) form unsorted array in O(nlogn) */
 int minimize(int *nums, int numssize, int *high, int *low) {
-    if (nums == NULL || high == NULL || low || NULL) {
+    if (nums == NULL || high == NULL || low == NULL) {
         return -1;
     }
     qsort(nums, numssize, sizeof(int), compar);
-    // if ()
+
+    int min_diff = INT_MAX;
+    int cur_diff = 0;
+    for (int i = 0; i < numssize - 1; i++) {
+        cur_diff = nums[i+1] - nums[i];
+        if (cur_diff < min_diff) {
+            min_diff = cur_diff;
+            *high = nums[i+1];
+            *low = nums[i];
+        }
+    } 
 
     return 1;
 }
@@ -76,15 +86,19 @@ int main(void) {
     int min;
     int set[] = {6, 13, 19, 3, 8};
 
-    assert(maximize(set, 5, &max, &min));
+    assert(maximize(set, 5, &max, &min) == 1);
     assert(max - min == 16);
 
     int set1[] = {2, 4, 9, 10, 40};
-    assert(maximize(set1, 5, &max, &min));
+    assert(maximize(set1, 5, &max, &min) == 1);
     assert(max - min == 38);
 
     int high;
     int low;
+    int set2[] = {6, 13, 19, 3, 8};
+    assert(minimize(set2, 5, &high, &low) == 1);
+    assert(high - low == 2);
+
     assert(minimize_1(set1, 4, &high, &low) == 1);
     assert(high == 10);
     assert(low == 9);
