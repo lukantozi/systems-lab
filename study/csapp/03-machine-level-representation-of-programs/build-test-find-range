@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+gcc -std=c17 -Wall -Wextra -Wpedantic -g -O0 test_find_range.c find_range_branch.s find_range_cmov.s -o test_find_range
