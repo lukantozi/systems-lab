@@ -4,7 +4,7 @@ CPPFLAGS = -Iinclude
 CFLAGS = -std=c23 -Wall -Wextra -Wpedantic -g 
 SANFLAGS = -fsanitize=address,undefined
 
-.PHONY: vector stack queue list dlist hashmap clean
+.PHONY: vector stack queue list dlist hashmap heap bst clean
 
 VECTOR = build/vector
 VECTOR_SRC = tests/test_vector.c src/vector.c
