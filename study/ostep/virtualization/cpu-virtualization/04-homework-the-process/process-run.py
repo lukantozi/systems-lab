@@ -1,5 +1,7 @@
 #! /usr/bin/env python
 
+# source: https://github.com/remzi-arpacidusseau/ostep-homework/tree/master/cpu-intro
+
 from __future__ import print_function
 import sys
 from optparse import OptionParser
