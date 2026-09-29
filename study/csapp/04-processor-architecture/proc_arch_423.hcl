@@ -1,0 +1,6 @@
+# An HCL description for the signal aluB in SEQ.
+
+word aluB = [
+  icode in { IOPQ, IRMMOVQ, IMRMOVQ, IPUSHQ, IPOPQ, ICALL, IRET } : valB;
+  icode in { IRRMOVQ, IIRMOVQ } : 0;
+]
