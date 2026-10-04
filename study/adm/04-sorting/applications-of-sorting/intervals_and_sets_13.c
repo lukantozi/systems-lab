@@ -1,12 +1,7 @@
 #include <limits.h>
 
-/*
-  [5] A camera at the door tracks the entry time a_i and exit time b_i (assume
-  b_i > a_i) for each of n persons p_i attending a party. Give an O(n log n) algo-
-  rithm that analyzes this data to determine the time when the most people were
-  simultaneously present at the party. You may assume that all entry and exit
-  times are distinct (no ties).
-*/
+/* ADM exercise: find peak attendance from distinct
+ * arrival and departure times using sorting. */
 
 int main(void) {
     int times[][2] = {{3, 6}, {2, 10}, {1, 7}, {5, 9}};

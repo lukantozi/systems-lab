@@ -1,12 +1,7 @@
 #include <assert.h>
 #include <stdio.h>
 
-/*
-  [3] Give an efficient algorithm to rearrange an array of n keys so that all
-  the negative keys precede all the non-negative keys. Your algorithm must be
-  in-place, meaning you cannot allocate another array to temporarily hold the
-  items. How fast is your algorithm?
-*/
+/* ADM exercise: partition negative and nonnegative values in place. */
 
 static void swap(int *v1, int *v2) {
     if (v1 == NULL || v2 == NULL)

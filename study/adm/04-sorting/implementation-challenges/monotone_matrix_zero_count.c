@@ -1,13 +1,7 @@
 #include <stdio.h>
 
-/*
-  [5] Consider an n×n array A containing integer elements (positive, negative, and
-  zero). Assume that the elements in each row of A are in strictly increasing order,
-  and the elements of each column of A are in strictly decreasing order. (Hence
-  there cannot be two zeros in the same row or the same column.) Describe an
-  efficient algorithm that counts the number of occurrences of the element 0 in A.
-  Analyze its running time.
-*/
+/* ADM exercise: count zeros in a matrix with strictly
+ * increasing rows and strictly decreasing columns. */
 
 #define ROWS(mat) ((sizeof(mat)) / (sizeof(mat[0])))
 #define COLS(mat) ((sizeof(mat[0])) / (sizeof(mat[0][0])))

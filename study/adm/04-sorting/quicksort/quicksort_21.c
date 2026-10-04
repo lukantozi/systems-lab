@@ -3,11 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 
-/*
-  [3] Use the partitioning idea of quicksort to give an algorithm that finds the
-  median element of an array of n integers in expected O(n) time. (Hint: must
-  you look at both sides of the partition?)
-*/
+/* ADM exercise: find a median using randomized partitioning. */
 
 #define LEN(arr) ((sizeof(arr)) / (sizeof(arr[0])))
 

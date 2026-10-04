@@ -3,11 +3,7 @@
 #include <stdlib.h>
 #include <limits.h>
 
-/*
-  [5] You are given a set S of n seg on the line, where segment Si ranges
-  from li to ri. Give an efficient algorithm to select the fewest number of seg
-  whose union completely covers the interval from 0 to m.
-*/
+/* ADM exercise: select a minimum-size segment cover of [0, m]. */
 
 static int compar(const void *p1, const void *p2) {
     const int *v1 = p1;
