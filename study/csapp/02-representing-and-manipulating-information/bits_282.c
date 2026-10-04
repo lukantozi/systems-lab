@@ -1,12 +1,9 @@
 #include <stdio.h>
 #include <limits.h>
-/*
- * We are running programs where values of type int are 32 bits. They are repre-
- * sented in two’s complement, and they are right shifted arithmetically. Values of
- * type unsigned are also 32 bits.
- *
- * We generate arbitrary values x and y, and convert them to unsigned values as
- * follows: */
+
+/* CS:APP 3e, Problem 2.82: analyze integer-expression identities
+ * under the exercise's 32-bit two's-complement model with arithmetic
+ * right shifts. */
 
 #if 0
 /* Create some arbitrary values */
@@ -16,13 +13,6 @@ int y = random();
 /* Convert to unsigned */
 unsigned ux = (unsigned) x;
 unsigned uy = (unsigned) y;
-
-/*
- * For each of the following C expressions, you are to indicate whether or
- * not the expression always yields 1. If it always yields 1, describe the underlying
- * mathematical principles. Otherwise, give an example of arguments that make it
- * yield 0.
- */
 
 int a = (x<y) == (-x>-y);
 /* does not always yield 1;

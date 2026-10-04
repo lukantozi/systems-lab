@@ -1,6 +1,4 @@
-# Write HCL code describing a circuit that for word inputs A, B, and C selects the
-# median of the three values. That is, the output equals the word lying between the
-# minimum and maximum of the three inputs.
+# CS:APP 3e, Problem 4.12: select the median of three inputs.
 
 word Med3 = [
   B <= A && A <= C : A

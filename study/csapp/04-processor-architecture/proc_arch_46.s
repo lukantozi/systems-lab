@@ -1,6 +1,5 @@
-# Modify the Y86-64 code for the sum function (Figure 4.6) to implement a function
-# absSum that computes the sum of absolute values of an array. Use a conditional
-# move instruction within your inner loop.
+# CS:APP 3e, Problem 4.6: adapt the supplied sum routine for
+# absolute values using a conditional move.
 
 # long sum(long *start, long count)
 # start in %rdi, count in %rsi

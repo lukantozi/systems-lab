@@ -1,9 +1,5 @@
-/*
- * Suppose we are given the task of generating code to multiply integer variable x
- * by various different constant factors K. To be efficient, we want to use only the
- * operations +, -, and <<. For the following values of K, write C expressions to
- * perform the multiplication using at most three operations per expression.
- */
+/* CS:APP 3e, Problem 2.77: constant multiplication using shifts,
+addition, and subtraction; at most three operations per expression. */
 
 /* A. K = 17 */
 int mult_by_17(int x) {

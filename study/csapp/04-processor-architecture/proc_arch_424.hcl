@@ -1,5 +1,5 @@
-# Modify the HCL code for dstE to implement cmovXX, having
-# instruction code IRRMOVQ, by making use of the Cnd signal.
+# CS:APP 3e, Problem 4.24: conditionally select the
+# register destination for cmovXX.
 
 word dstE = [
   icode in { IRRMOVQ } && Cnd : rB;

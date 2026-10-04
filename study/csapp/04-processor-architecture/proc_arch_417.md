@@ -1,9 +1,6 @@
-We can see by the instruction encodings (Figures 4.2 and 4.3) that the rrmovq
-instruction is the unconditional version of a more general class of instructions
-that include the conditional moves. Show how you would modify the steps for the
-rrmovq instruction below to also handle the six conditional move instructions.
-You may find it useful to see how the implementation of the jXX instructions
-(Figure 4.21) handles conditional behavior.
+# CS:APP 3e, Problem 4.17
+
+Stage description for conditional register moves.
 
 ```txt
 Stage       cmovXX rA, rB

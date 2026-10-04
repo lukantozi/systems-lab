@@ -1,10 +1,8 @@
 #include <stdio.h>
 #include <limits.h>
 
-/* Write code for a function threefourths that, for integer 
- * argument x, computes the value of 3/4 x, rounded toward zero.
- * It should not overflow. Your function should follow the bit-level
- * integer coding rules (page 164). */
+/* CS:APP 3e, Problem 2.80: compute three-fourths of x with truncation
+ * toward zero, avoiding intermediate overflow. */
 int threefourths(int x) {
     int xs_mask = ~(!!(x & ~(UINT_MAX >> 1))) + 1;
     int bias = 3 & xs_mask;

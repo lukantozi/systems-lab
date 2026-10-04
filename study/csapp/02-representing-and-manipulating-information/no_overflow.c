@@ -14,12 +14,6 @@ int tadd_k(int x, int y) {
     if (x < 0 && y < 0 && x + y >= 0) return 0;
     if (x >= 0 && y >= 0 && x + y < 0) return 0;
     return 1;
-    /* book solution
-     * int sum = x+y;
-     * int neg_over = x < 0 && y < 0 && sum >= 0;
-     * int pos_over = x >= 0 && y >= 0 && sum < 0;
-     * return !neg_over && !pos_over;
-    */
 }
 
 int main(void) {

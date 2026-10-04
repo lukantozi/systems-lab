@@ -1,9 +1,5 @@
-/*
- * Write code for a function mul3div4 that, for integer argument x, computes 3 ∗
- * x/4 but follows the bit-level integer coding rules (page 164). Your code should
- * replicate the fact that the computation 3*x can cause overflow.
- */
-
+/* CS:APP 3e, Problem 2.79: multiply by three, then divide by four with
+ * truncation toward zero, retaining the exercise's overflow model. */
 int mul3div4(int x) {
     int p = (x << 1) + x;
     int ps_mask = ~(!!(p & ~(UINT_MAX >> 1))) + 1;

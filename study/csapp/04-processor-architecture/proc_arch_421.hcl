@@ -1,6 +1,5 @@
-# Register ID dstM indicates the destination register for write port M, where valM,
-# the value read from memory, is stored. This is shown in Figures 4.18 to 4.21 as the
-# second step in the write-back stage. Write HCL code for dstM
+# CS:APP 3e, Problem 4.21: select the destination register
+# for memory results.
 
 word dstM = [
   icode in { IMRMOVQ, IPOPQ } : rA;
